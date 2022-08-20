@@ -1,42 +1,34 @@
 import axios from 'axios';
 import dedent from 'dedent';
 import FormData from 'form-data';
-import JSZip from 'jszip';
+// import JSZip from 'jszip';
 
-const generateZepapp = async (appGeneratedScript: string): Promise<Buffer> => {
-  const zip = new JSZip();
-  zip.file('main.js', appGeneratedScript);
+// const generateZepapp = async (appGeneratedScript: string): Promise<Buffer> => {
+//   const zip = new JSZip();
+//   zip.file('main.js', appGeneratedScript);
 
-  // .zepapp.zip
-  const zepapp = await zip.generateAsync({ type: 'nodebuffer' });
-  return zepapp;
-};
+//   // .zepapp.zip
+//   const zepapp = await zip.generateAsync({ type: 'nodebuffer' });
+//   return zepapp;
+// };
 
 type PublishOptions = {
+  file?: Buffer;
   sessionCookie: string;
   name: string;
   description: string;
-  type: 'minigame' | 'sidebar';
+  type: number; // 1: 일반, 2: 미니게임, 3: 사이드바
   appId?: string;
 };
-const publishZepapp = async (zepapp: Buffer, options: PublishOptions) => {
+export const publishZepApp = async (options: PublishOptions) => {
   const formData = new FormData();
-  // const blob = new Blob([zepapp]);
-  formData.append('file', zepapp, `${options.name}.zepapp.zip`);
-  formData.append('name', options.name);
-  formData.append('desc', options.description);
 
-  console.log(formData);
+  if (options.file) formData.append('file', options.file, { filename: 'zep.zip', contentType: 'application/zip' });
+  if (options.name) formData.append('name', options.name);
+  if (options.description) formData.append('desc', options.description);
+  if (options.type) formData.append('type', options.type);
 
-  let type = '1';
-  switch (options.type) {
-    case 'minigame':
-      type = '2';
-      break;
-    case 'sidebar':
-      type = '3';
-  }
-  formData.append('type', type);
+  console.log(formData)
 
   const appId = options.appId || 'create';
   const length = await new Promise<number>((resolve) =>
@@ -54,47 +46,5 @@ const publishZepapp = async (zepapp: Buffer, options: PublishOptions) => {
       },
     },
   );
-  console.log(data);
+  return data
 };
-
-const APP_GENERATED_SCRIPT = dedent`
-  var player, text;
-
-  App.onInit.Add(function () {
-    App.sayToAll('Hi, App Start!');
-  });
-  App.onSay.Add(function (player, text) {
-    for (var count = 0; count < 5; count++) {
-      App.sayToAll(text);
-      App.sayToAll(player);
-    }
-  });
-`;
-const APP_PUBLISH_OPTIONS: PublishOptions = {
-  sessionCookie: '',
-  name: 'Test App',
-  description: 'Test App',
-  type: 'minigame',
-  appId: 'create',
-};
-
-// const getToken = async () => {
-//   // const loginData = new FormData();
-//   // loginData.append('email', 'i@junho.io');
-//   // await axios.post('https://zep.us/api/me/signin', loginData);
-
-//   const confirmData = new FormData();
-//   confirmData.append('email', 'i@junho.io');
-//   confirmData.append('t', '075139');
-//   const { headers } = await axios.post(
-//     'https://zep.us/api/me/signin/confirm',
-//     confirmData,
-//   );
-//   const sessionCookie = headers['set-cookie']![0];
-//   console.log(sessionCookie);
-// };
-
-(async () => {
-  const app = await generateZepapp(APP_GENERATED_SCRIPT);
-  await publishZepapp(app, APP_PUBLISH_OPTIONS);
-})();

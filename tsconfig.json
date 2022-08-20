@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "ES2015",
+    "target": "ES6",
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+    ],
     "declaration": true,
     "outDir": "lib",
     "jsx": "react",
