@@ -6,8 +6,6 @@ import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
 
-import logger from '../../tools/logger';
-
 type Options = {
   projectRoot?: string;
 };
@@ -55,7 +53,12 @@ const auth = async (loader: Ora, sessionFilePath: string) => {
   loader.succeed();
 };
 
-export default (async function publish([]: Array<string>, options: Options) {
+type Config = {};
+
+export const publish = async function publish(
+  []: Array<string>,
+  options: Options,
+) {
   const cwd = process.cwd();
   const root = options.projectRoot || cwd;
 
@@ -108,7 +111,7 @@ export default (async function publish([]: Array<string>, options: Options) {
   } catch (e) {
     loader.fail();
     if (e instanceof Error) {
-      logger.error(e.message);
+      console.error(e);
     }
   }
-});
+};
