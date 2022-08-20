@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Blob } from 'buffer';
 import dedent from 'dedent';
 import FormData from 'form-data';
 import JSZip from 'jszip';
