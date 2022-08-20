@@ -1,22 +1,22 @@
-import init from "./init";
+import init from './init';
 
 export default {
   func: init,
-  name: "init <projectName>",
+  name: 'init <projectName>',
   description:
-    "Initialize a new ZEP Script project named <projectName> in a directory of the same name.",
+    'Initialize a new ZEP Script project named <projectName> in a directory of the same name.',
   options: [
     {
-      name: "--npm",
-      description: "Forces using npm for initialization",
+      name: '--npm',
+      description: 'Forces using npm for initialization',
     },
     {
-      name: "--directory <string>",
-      description: "Uses a custom directory instead of `<projectName>`.",
+      name: '--directory <string>',
+      description: 'Uses a custom directory instead of `<projectName>`.',
     },
     {
-      name: "--skip-install",
-      description: "Skips dependencies installation step",
+      name: '--skip-install',
+      description: 'Skips dependencies installation step',
     },
   ],
 };

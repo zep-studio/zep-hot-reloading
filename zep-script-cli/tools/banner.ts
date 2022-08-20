@@ -1,6 +1,6 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
-const zepChalk = chalk.hex("#6758ff");
+const zepChalk = chalk.hex('#6758ff');
 
 const logo = `
                   .-======-:.                     
@@ -24,4 +24,4 @@ const logo = `
 
 export default `${zepChalk(logo)}
 
-${zepChalk("ZEP Script")}`;
+${zepChalk('ZEP Script')}`;

@@ -1,13 +1,13 @@
-import archive from "./archive";
-import build from "./build";
-import publish from "./publish";
-import init from "./init";
+import archive from './archive';
+import build from './build';
+import init from './init';
+import publish from './publish';
 
 export type OptionValue = string | boolean | number;
 
 export type CommandFunction<Args = Object> = (
   argv: string[],
-  args: Args
+  args: Args,
 ) => Promise<void> | void;
 
 export type CommandOption = {

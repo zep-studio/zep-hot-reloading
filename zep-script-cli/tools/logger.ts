@@ -1,6 +1,6 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
-const SEPARATOR = ", ";
+const SEPARATOR = ', ';
 
 let verbose = false;
 let disabled = false;
@@ -10,31 +10,31 @@ const formatMessages = (messages: Array<string>) =>
 
 const success = (...messages: Array<string>) => {
   if (!disabled) {
-    console.log(`${chalk.green.bold("success")} ${formatMessages(messages)}`);
+    console.log(`${chalk.green.bold('success')} ${formatMessages(messages)}`);
   }
 };
 
 const info = (...messages: Array<string>) => {
   if (!disabled) {
-    console.log(`${chalk.cyan.bold("info")} ${formatMessages(messages)}`);
+    console.log(`${chalk.cyan.bold('info')} ${formatMessages(messages)}`);
   }
 };
 
 const warn = (...messages: Array<string>) => {
   if (!disabled) {
-    console.warn(`${chalk.yellow.bold("warn")} ${formatMessages(messages)}`);
+    console.warn(`${chalk.yellow.bold('warn')} ${formatMessages(messages)}`);
   }
 };
 
 const error = (...messages: Array<string>) => {
   if (!disabled) {
-    console.error(`${chalk.red.bold("error")} ${formatMessages(messages)}`);
+    console.error(`${chalk.red.bold('error')} ${formatMessages(messages)}`);
   }
 };
 
 const debug = (...messages: Array<string>) => {
   if (verbose && !disabled) {
-    console.log(`${chalk.gray.bold("debug")} ${formatMessages(messages)}`);
+    console.log(`${chalk.gray.bold('debug')} ${formatMessages(messages)}`);
   }
 };
 

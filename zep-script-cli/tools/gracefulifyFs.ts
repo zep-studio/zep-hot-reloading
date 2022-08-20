@@ -1,5 +1,5 @@
-import realFs from "fs";
-import gracefulFs from "graceful-fs";
+import realFs from 'fs';
+import gracefulFs from 'graceful-fs';
 
 gracefulFs.gracefulify(realFs);
 

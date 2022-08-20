@@ -1,12 +1,13 @@
-import chalk from "chalk";
-import clear from "clear";
-import execa from "execa";
-import fs from "fs-extra";
-import ora from "ora";
-import os from "os";
-import path from "path";
-import banner from "../../tools/banner";
-import logger from "../../tools/logger";
+import chalk from 'chalk';
+import clear from 'clear';
+import execa from 'execa';
+import fs from 'fs-extra';
+import ora from 'ora';
+import os from 'os';
+import path from 'path';
+
+import banner from '../../tools/banner';
+import logger from '../../tools/logger';
 
 type Options = {
   npm?: boolean;
@@ -26,14 +27,14 @@ async function createProjectDirectory(directory: string) {
 
   if (fs.existsSync(directory)) {
     throw new Error(
-      `Cannot initialize new project because directory "${directory}" already exists.`
+      `Cannot initialize new project because directory "${directory}" already exists.`,
     );
   }
 
   try {
     fs.mkdirSync(directory, { recursive: true });
   } catch (error) {
-    throw new Error("Error occurred while trying to create project directory.");
+    throw new Error('Error occurred while trying to create project directory.');
   }
 
   return directory;
@@ -50,13 +51,13 @@ async function installTemplate({
 }) {
   logger.debug(`Installing template to ${root}`);
 
-  const packageManager = npm ? "npm" : "yarn";
-  await execa(packageManager, ["init", "--yes"], {
-    stdio: !logger.isVerbose() ? "pipe" : "inherit",
+  const packageManager = npm ? 'npm' : 'yarn';
+  await execa(packageManager, ['init', '--yes'], {
+    stdio: !logger.isVerbose() ? 'pipe' : 'inherit',
     cwd: root,
   });
-  await execa(packageManager, ["add", name], {
-    stdio: !logger.isVerbose() ? "pipe" : "inherit",
+  await execa(packageManager, ['add', name], {
+    stdio: !logger.isVerbose() ? 'pipe' : 'inherit',
     cwd: root,
   });
 }
@@ -66,15 +67,15 @@ async function copyTemplate(templatePath: string, projectRoot: string) {
 
   await fs.copy(templatePath, projectRoot, {
     filter: (path) =>
-      !path.includes("zep-script-template/node_modules") &&
-      !path.includes("zep-script-template/dist"),
+      !path.includes('zep-script-template/node_modules') &&
+      !path.includes('zep-script-template/dist'),
   });
 }
 
 async function renameProjectName(projectRoot: string, projectName: string) {
   logger.debug(`Renaming project in ${projectRoot} to ${projectName}`);
 
-  const packageJson = path.join(projectRoot, "package.json");
+  const packageJson = path.join(projectRoot, 'package.json');
   const packageJsonObject = JSON.parse(fs.readFileSync(packageJson).toString());
   packageJsonObject.name = projectName;
   delete packageJsonObject.publishConfig;
@@ -92,9 +93,9 @@ async function installDependencies({
 }) {
   logger.debug(`Installing dependencies in ${root}`);
 
-  const packageManager = npm ? "npm" : "yarn";
-  await execa(packageManager, ["install"], {
-    stdio: !logger.isVerbose() ? "pipe" : "inherit",
+  const packageManager = npm ? 'npm' : 'yarn';
+  await execa(packageManager, ['install'], {
+    stdio: !logger.isVerbose() ? 'pipe' : 'inherit',
     cwd: root,
   });
 }
@@ -105,47 +106,47 @@ async function createFromTemplate({
   directory,
   skipInstall,
 }: TemplateOptions) {
-  logger.debug("Initializing new project");
+  logger.debug('Initializing new project');
   logger.log(banner);
 
   const loader = ora();
 
   const projectDir = await createProjectDirectory(directory);
   const templateSourceDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), "zep-script-cli-init")
+    path.join(os.tmpdir(), 'zep-script-cli-init'),
   );
 
   try {
-    loader.start("Downloading template");
+    loader.start('Downloading template');
 
-    const templateName = "@zep.us/zep-script-template";
+    const templateName = '@zep.us/zep-script-template';
     await installTemplate({ npm, root: templateSourceDir, name: templateName });
 
     loader.succeed();
-    loader.start("Copying template");
+    loader.start('Copying template');
 
     const templatePath = path.resolve(
       templateSourceDir,
-      "node_modules",
-      templateName
+      'node_modules',
+      templateName,
     );
     await copyTemplate(templatePath, projectDir);
 
     loader.succeed();
-    loader.start("Processing template");
+    loader.start('Processing template');
 
     await renameProjectName(projectDir, projectName);
 
     loader.succeed();
 
     if (!skipInstall) {
-      loader.start("Installing dependencies");
+      loader.start('Installing dependencies');
 
       await installDependencies({ npm, root: projectDir });
 
       loader.succeed();
     } else {
-      loader.succeed("Dependencies installation skipped");
+      loader.succeed('Dependencies installation skipped');
     }
     logger.log(chalk.green(`Project ${projectName} initialized successfully.`));
   } catch (e) {
@@ -158,25 +159,25 @@ async function createFromTemplate({
 
 function validateProjectName(name: string) {
   const NAME_REGEX = /^[$A-Z_][0-9A-Z_$]*$/i;
-  const reservedNames = ["zep-script"];
+  const reservedNames = ['zep-script'];
 
   if (!String(name).match(NAME_REGEX)) {
     throw new Error(
-      `"${name}" is not a valid name for a project. Please use a valid identifier name (alphanumeric).`
+      `"${name}" is not a valid name for a project. Please use a valid identifier name (alphanumeric).`,
     );
   }
 
   const lowerCaseName = name.toLowerCase();
   if (reservedNames.includes(lowerCaseName)) {
     throw new Error(
-      `Not a valid name for a project. Please do not use the reserved word "${lowerCaseName}".`
+      `Not a valid name for a project. Please do not use the reserved word "${lowerCaseName}".`,
     );
   }
 }
 
 export default (async function initialize(
   [projectName]: Array<string>,
-  options: Options
+  options: Options,
 ) {
   clear();
 
