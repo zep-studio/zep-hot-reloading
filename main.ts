@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import FormData from 'form-data';
 import multer from 'multer'
+import cors from 'cors'
 import { publishZepApp } from './deployer';
 import { HTMLElement, parse } from 'node-html-parser'
 
@@ -12,6 +13,8 @@ require('express-async-errors')
 const app = express();
 const port = process.env.PORT;
 const upload = multer()
+
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.send('Hi I am a publisher');
